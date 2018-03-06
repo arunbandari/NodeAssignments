@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Paytm Crawler</title>
+<style type="text/css">
+	.content{width: 500px;margin: 0px auto;}
+	.search_box{width:500px;float: left;}
+	.search {width: 100%;height: 30px;font-size: 20px;padding: 3px;outline: 0;box-sizing: border-box;}
+	.result{width: 500px;float: left;border: 1px solid #ddd;box-sizing: border-box;min-height: 0px;margin: 0;}
+	.head{text-align: center;}
+	li{ list-style: none;padding: 7px;    background: #fff;    border-bottom: 1px solid #ddd; }
+	ul{ padding: 0;margin: 0; }
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script type="text/javascript">
+var app = angular.module('crawl_app', []);
+app.controller('crawlCtrl', function ($scope,$http,$window) {
+$scope.getAutoSuggestions = function () {
+	 var suggestions = "";
+	 var post = $http({
+                method: "get",
+                url: "/all",
+                dataType: 'json',
+                params: {name: $scope.search_term},
+                headers: { "Content-Type": "application/json" }
+            });
+ 
+            post.success(function (data, status) {
+            	$scope.suggestions = "";
+            	$scope.suggestions = data;
+                console.log(data);
+            });
+}
+});
+</script>
+</head>
+<body>
+<div ng-app="crawl_app" ng-controller="crawlCtrl" class="content">
+	<div class="head"><h1>PAYTM CRAWLER</h1> </div>
+	<div class="search_box"> <input type="text" ng-keypress="getAutoSuggestions()" ng-model="search_term" class="search"> </div>
+    <div class="result" id="result">
+	<ul>
+		<li  ng-repeat = "x in suggestions">{{x.text}}</li>
+	</ul>
+</div>
+</body>
+</html>
